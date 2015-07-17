@@ -92,7 +92,6 @@ RUN mkdir -p /src/app && \
     drush make ../drupal.make -y && \
     drush make --no-core  --contrib-destination=./sites/all ../project.make -y && \
     mv ../modules/custom sites/all/modules/custom && \
-    mv ../themes/custom sites/all/themes/custom && \
     cd / && mv /src/app /var/www && \
     mkdir -p /var/www/sites/default/files && \
     chmod a+w /var/www/sites/default -R && \

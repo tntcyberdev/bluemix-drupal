@@ -97,11 +97,7 @@ RUN mkdir -p /src/app && \
     chmod a+w /var/www/sites/default -R && \
     chown -R www-data:www-data /var/www/
 
-RUN /etc/init.d/mysql start && \
-    cd /var/www && \
-    drush si -y minimal --db-url=mysql://root:@localhost/drupal --account-pass=admin && \
-    drush dl admin_menu devel && \
-    drush en -y admin_menu
+RUN /etc/init.d/mysql start
 
 EXPOSE 80
 CMD exec supervisord -n

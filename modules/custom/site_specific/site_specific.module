@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * Implements hook_menu().
+ */
+function site_specific_menu() {
+  $items['demo'] = array(
+    'title' => 'Demo page',
+    'page callback' => 'ss_page_demo',
+    'access callback' => TRUE,
+  );
+
+  return $items;
+}
+
+function ss_page_demo() {
+  global $user;
+
+  return t('Hello @name', array('@name' => $user->name);
+}

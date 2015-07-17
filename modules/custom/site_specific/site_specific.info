@@ -1,0 +1,6 @@
+name = Custom site
+description = Custom function for site.
+
+package = Custom
+
+core = 7.x

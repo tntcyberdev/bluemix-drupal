@@ -17,9 +17,6 @@ RUN apt-get install -y \
     php5-curl \
     libapache2-mod-php5 \
     curl \
-    mysql-server \
-    mysql-client \
-    phpmyadmin \
     wget \
     supervisor \
     unzip
@@ -70,16 +67,8 @@ RUN echo "Listen 8080" >> /etc/apache2/ports.conf
 RUN sed -i 's/VirtualHost *:80/VirtualHost */' /etc/apache2/sites-available/default
 RUN a2enmod rewrite
 
-# Setup PHPMyAdmin
-RUN echo -e "\n# Include PHPMyAdmin configuration\nInclude /etc/phpmyadmin/apache.conf\n" >> /etc/apache2/apache2.conf
-RUN sed -i -e "s/\/\/ \$cfg\['Servers'\]\[\$i\]\['AllowNoPassword'\]/\$cfg\['Servers'\]\[\$i\]\['AllowNoPassword'\]/g" /etc/phpmyadmin/config.inc.php
-
-# Setup MySQL, bind on all addresses.
-RUN sed -i -e 's/^bind-address\s*=\s*127.0.0.1/#bind-address = 127.0.0.1/' /etc/mysql/my.cnf
-
 # Setup Supervisor.
 RUN echo -e '[program:apache2]\ncommand=/bin/bash -c "source /etc/apache2/envvars && exec /usr/sbin/apache2 -DFOREGROUND"\nautorestart=true\n\n' >> /etc/supervisor/supervisord.conf
-RUN echo -e '[program:mysql]\ncommand=/usr/bin/pidproxy /var/run/mysqld/mysqld.pid /usr/sbin/mysqld\nautorestart=true\n\n' >> /etc/supervisor/supervisord.conf
 RUN echo -e '[program:sshd]\ncommand=/usr/sbin/sshd -D\n\n' >> /etc/supervisor/supervisord.conf
 RUN echo -e '[program:blackfire]\ncommand=/usr/local/bin/launch-blackfire\n\n' >> /etc/supervisor/supervisord.conf
 
@@ -96,8 +85,6 @@ RUN mkdir -p /src/app && \
     mkdir -p /var/www/sites/default/files && \
     chmod a+w /var/www/sites/default -R && \
     chown -R www-data:www-data /var/www/
-
-RUN /etc/init.d/mysql start
 
 EXPOSE 80
 CMD exec supervisord -n
